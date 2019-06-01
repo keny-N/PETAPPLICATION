@@ -5,10 +5,10 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
 import kotlinx.android.synthetic.main.activity_menu.*
+import android.widget.*
+
 
 class menu : AppCompatActivity() {
 
@@ -61,40 +61,125 @@ class menu : AppCompatActivity() {
             }
         })
         thread.start()
+        val data = ArrayList<String>()
+        data.add("ふる")
+        data.add("なでる")
+        data.add("？？？")
+        data.add("？？？")
+        data.add("？？？")
+        data.add("CommingSoon")
+        data.add("CommingSoon")
+        val data2 = ArrayList<String>()
+        data2.add("みずをあげる")
+        data2.add("？？？")
+        data2.add("？？？")
+        data2.add("CommingSoon")
+
+
+        // リスト項目とListViewを対応付けるArrayAdapterを用意する
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, data)
+        val adapter2 = ArrayAdapter(this, android.R.layout.simple_list_item_1, data2)
+
+        // ListViewにArrayAdapterを設定する
+        val listView = findViewById(R.id.listView) as ListView
+        val listView2 = findViewById(R.id.listView2) as ListView
+
+        listView.setAdapter(adapter)
+        listView.setVisibility(View.INVISIBLE)
+        listView2.setAdapter(adapter2)
+        listView2.setVisibility(View.INVISIBLE)
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            when(position){
+                0 -> {
+                    flg = false
+                    var intent = Intent(this, shake::class.java)
+                    intent.putExtra("pet",pet)
+                    startActivity(intent)
+                }
+                1 -> {
+                    flg = false
+                    var intent = Intent(this, naderu::class.java)
+                    intent.putExtra("pet",pet)
+                    startActivity(intent)
+                }
+            }
+        }
+        listView2.setOnItemClickListener { parent, view, position, id ->
+            when(position){
+                0 -> {
+                    flg = false
+                    var intent = Intent(this, water::class.java)
+                    intent.putExtra("pet",pet)
+                    startActivity(intent)
+                }
+            }
+        }
+
     }
 
 
     override fun onResume() {
         super.onResume()
-        var asobi_button = findViewById<Button>(R.id.asobi_button) as Button
-        var naderu_button = findViewById<Button>(R.id.naderu_button) as Button
-        var water_button = findViewById<Button>(R.id.water_button) as Button
-        var test_button = findViewById<Button>(R.id.testbutton) as Button
-        var test2_button = findViewById<Button>(R.id.testbutton2) as Button
+//        var asobi_button = findViewById<Button>(R.id.asobi_button) as Button
+//        var naderu_button = findViewById<Button>(R.id.naderu_button) as Button
+//        var water_button = findViewById<Button>(R.id.water_button) as Button
+//        var test_button = findViewById<Button>(R.id.testbutton) as Button
+//        var test2_button = findViewById<Button>(R.id.testbutton2) as Button
 
 
 
-
-
-        asobi_button.setOnClickListener {
-            flg = false
-            var intent = Intent(this, shake::class.java)
-            intent.putExtra("pet",pet)
-            startActivity(intent)
+        var listv = false
+        var list2v = false
+        abutton.setOnClickListener {
+            if(list2v == true) {
+                listView2.setVisibility(View.INVISIBLE)
+                listView.setVisibility(View.VISIBLE)
+                list2v = false
+                listv = true
+            }else if(listv == true){
+                listView.setVisibility(View.INVISIBLE)
+                listv = false
+            }else{
+                listView.setVisibility(View.VISIBLE)
+                listv = true
+            }
+        }
+        abutton2.setOnClickListener {
+            if(listv == true) {
+                listView.setVisibility(View.INVISIBLE)
+                listView2.setVisibility(View.VISIBLE)
+                listv = false
+                list2v = true
+            }else if(list2v == true){
+                listView2.setVisibility(View.INVISIBLE)
+                list2v = false
+            }else{
+                listView2.setVisibility(View.VISIBLE)
+                list2v = true
+            }
         }
 
-        naderu_button.setOnClickListener {
-            flg = false
-            var intent = Intent(this, naderu::class.java)
-            intent.putExtra("pet",pet)
-            startActivity(intent)
-        }
-        water_button.setOnClickListener {
-            flg = false
-            var intent = Intent(this, water::class.java)
-            intent.putExtra("pet",pet)
-            startActivity(intent)
-        }
+
+//        asobi_button.setOnClickListener {
+//            flg = false
+//            var intent = Intent(this, shake::class.java)
+//            intent.putExtra("pet",pet)
+//            startActivity(intent)
+//        }
+//
+//        naderu_button.setOnClickListener {
+//            flg = false
+//            var intent = Intent(this, naderu::class.java)
+//            intent.putExtra("pet",pet)
+//            startActivity(intent)
+//        }
+//        water_button.setOnClickListener {
+//            flg = false
+//            var intent = Intent(this, water::class.java)
+//            intent.putExtra("pet",pet)
+//            startActivity(intent)
+//        }
     }
     fun setWater() {
         when (hp) {
