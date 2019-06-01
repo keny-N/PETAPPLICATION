@@ -15,12 +15,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        choise_1.setOnClickListener { pet = Pet(1,50,"here1")}
-        choise_2.setOnClickListener { pet = Pet(2,100,"here2")}
-        choise_3.setOnClickListener { pet = Pet(3,200,"here3")}
-        choise_4.setOnClickListener { pet = Pet(4,300,"here4")}
-        choise_5.setOnClickListener { pet = Pet(5,400,"here5")}
-        choise_6.setOnClickListener { pet = Pet(6,500,"here6") }
+        choise_1.setOnClickListener { pet = Pet(1,100,"here1")}
+        choise_2.setOnClickListener { pet = Pet(2,80,"here2")}
+        choise_3.setOnClickListener { pet = Pet(3,60,"here3")}
+        choise_4.setOnClickListener { pet = Pet(4,50,"here4")}
+        choise_5.setOnClickListener { pet = Pet(5,30,"here5")}
+        choise_6.setOnClickListener { pet = Pet(6,10,"here6") }
 
 
 

@@ -1,42 +1,39 @@
 package jp.ac.asojuku.st.petapplication
 
+import android.annotation.SuppressLint
 import android.os.Parcel
-import android.os.Parcelable
+import android.util.Log
 
-class Pet(pet_dec:Int,pet_border:Int,pet_png:String):Parcelable {
+import java.io.Serializable
+
+class Pet(dec:Int, love_rate:Int, png:String):Serializable{
     var pet_png:String = ""
     var pet_dec:Int = 0
     var pet_water:Int = 100
     var pet_love:Int = 0
-    var pet_border = 0
+    var pet_love_rate= 0
     var pet_name = ""
 
-    constructor(parcel: Parcel) : this(
-        TODO("pet_png"),
-        TODO("pet_dec"),
-        TODO("pet_border"),
-        TODO("pet_name")
-    ) {
-        pet_png = parcel.readString()
-        pet_dec = parcel.readInt()
-        pet_water = parcel.readInt()
-        pet_love = parcel.readInt()
-        pet_border = parcel.readInt()
-        pet_name = parcel.readString()
-    }
-
     init {
-        this.pet_png = pet_png
-        this.pet_dec = pet_dec
-        this.pet_border = pet_border
-        this.pet_name = pet_name
-
+        this.pet_png = png
+        this.pet_dec = dec
+        this.pet_love_rate = love_rate
     }
-    fun water_inc(water:Int){
+    fun water_inc(water:Int):Int{
         this.pet_water += water
+        if(this.pet_water>100){
+            pet_water=100
+        }
+        return  pet_water
     }
-    fun love_inc(love:Int){
-        this.pet_love += love
+    fun love_inc(love:Int):Int{
+        this.pet_love += (love * pet_love_rate) / 100
+        if(this.pet_love>100){
+            pet_love=100
+        }
+        Log.d("love",pet_love.toString())
+        return  pet_love
+
     }
 
     fun tick(){
@@ -46,26 +43,5 @@ class Pet(pet_dec:Int,pet_border:Int,pet_png:String):Parcelable {
         }
     }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(pet_png)
-        parcel.writeInt(pet_dec)
-        parcel.writeInt(pet_water)
-        parcel.writeInt(pet_love)
-        parcel.writeInt(pet_border)
-        parcel.writeString(pet_name)
-    }
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<Pet> {
-        override fun createFromParcel(parcel: Parcel): Pet {
-            return Pet(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Pet?> {
-            return arrayOfNulls(size)
-        }
-    }
 }

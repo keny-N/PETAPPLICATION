@@ -39,7 +39,6 @@ abstract class FlickCheck
         frickView.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    Log.d("result" , "te")
                     touchX = event.x
                     touchY = event.y
                     maxX = event.x
@@ -92,7 +91,7 @@ abstract class FlickCheck
      */
     private fun check() {
 
-        if(turn>1){
+        if(turn>10){
             Log.d("result" , turn.toString())
             getFlick(turn)
             return

@@ -3,6 +3,7 @@ package jp.ac.asojuku.st.petapplication
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
@@ -11,24 +12,57 @@ import kotlinx.android.synthetic.main.activity_menu.*
 
 class menu : AppCompatActivity() {
 
-    var hp =2   //体力変数
-    var love =3 //愛情変数
+    var hp = 0   //体力変数
+    var love = 0 //愛情変数
+    var pet = Pet(0,0,"")
+    var flg = true
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
 
-        intent.getIntExtra("dec",0)
-        intent.getIntExtra("border",0)
-        intent.getStringExtra("png")
-        intent.getStringExtra("name")
+        val extras = intent.extras
+        pet = extras!!.getSerializable("pet") as Pet
+        this.hp = pet.pet_water/17
+        this.love = pet.pet_love/17
+        setWater()
+        setLove()
+        petName.setText(pet.pet_name)
 
-        Log.d("TEST", intent.getStringExtra("name").toString())
+        val handler = Handler()
+        var thread = Thread(Runnable {
+            while (flg == true) {
+                Thread.sleep(1000)
+                pet.tick()
+                if(pet.pet_love/20 != love){
+                    this.love = pet.pet_love/17
 
-        petName.setText(intent.getStringExtra("name"))
-
-
+                    handler.post { setLove() }
+                }
+                if (pet.pet_water < 0) {
+                    hp = 0
+                    handler.post{setWater()}
+                    flg = false
+                    var intent = Intent(this,end::class.java)
+                    if(pet.pet_love>=100){
+                        intent.putExtra("flg",1)
+                    }else{
+                        intent.putExtra("flg",0)
+                    }
+                    intent.putExtra("pet",pet)
+                    startActivity(intent)
+                } else if (hp != pet.pet_water / 17) {
+                    hp = pet.pet_water/17
+                    handler.post {
+                        setWater()
+                    }
+                }
+                Log.d("e", pet.pet_water.toString())
+            }
+        })
+        thread.start()
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -40,110 +74,108 @@ class menu : AppCompatActivity() {
 
 
 
-        var hp1 = findViewById<ImageView>(R.id.hp_icon_1)
-        var hp2 = findViewById<ImageView>(R.id.hp_icon_2)
-        var hp3 = findViewById<ImageView>(R.id.hp_icon_3)
-        var hp4 = findViewById<ImageView>(R.id.hp_icon_4)
-        var love1 = findViewById<ImageView>(R.id.love_icon_1)
-        var love2 = findViewById<ImageView>(R.id.love_icon_2)
-        var love3 = findViewById<ImageView>(R.id.love_icon_3)
-        var love4 = findViewById<ImageView>(R.id.love_icon_4)
+
 
         asobi_button.setOnClickListener {
-            var intent = Intent(this,shake::class.java)
-
+            flg = false
+            var intent = Intent(this, shake::class.java)
+            intent.putExtra("pet",pet)
             startActivity(intent)
         }
 
         naderu_button.setOnClickListener {
-            var intent = Intent(this,naderu::class.java)
-
+            flg = false
+            var intent = Intent(this, naderu::class.java)
+            intent.putExtra("pet",pet)
             startActivity(intent)
         }
         water_button.setOnClickListener {
-            var intent = Intent(this,water::class.java)
-
+            flg = false
+            var intent = Intent(this, water::class.java)
+            intent.putExtra("pet",pet)
             startActivity(intent)
         }
-
-
-        when(hp){
-            0 ->{   hp1.setImageResource(R.drawable.hp_x)
-                    hp2.setImageResource(R.drawable.hp_x)
-                    hp3.setImageResource(R.drawable.hp_x)
-                    hp4.setImageResource(R.drawable.hp_x)
+    }
+    fun setWater() {
+        when (hp) {
+            0 -> {
+                hp_icon_1.setImageResource(R.drawable.hp_x)
+                hp_icon_2.setImageResource(R.drawable.hp_x)
+                hp_icon_3.setImageResource(R.drawable.hp_x)
+                hp_icon_4.setImageResource(R.drawable.hp_x)
             }
-            1 ->{
-                hp1.setImageResource(R.drawable.hp)
-                hp2.setImageResource(R.drawable.hp_x)
-                hp3.setImageResource(R.drawable.hp_x)
-                hp4.setImageResource(R.drawable.hp_x)
-
-            }
-            2 ->{
-                hp1.setImageResource(R.drawable.hp)
-                hp2.setImageResource(R.drawable.hp)
-                hp3.setImageResource(R.drawable.hp_x)
-                hp4.setImageResource(R.drawable.hp_x)
+            1 -> {
+                hp_icon_1.setImageResource(R.drawable.hp)
+                hp_icon_2.setImageResource(R.drawable.hp_x)
+                hp_icon_3.setImageResource(R.drawable.hp_x)
+                hp_icon_4.setImageResource(R.drawable.hp_x)
 
             }
-            3 ->{
-                hp1.setImageResource(R.drawable.hp)
-                hp2.setImageResource(R.drawable.hp)
-                hp3.setImageResource(R.drawable.hp)
-                hp4.setImageResource(R.drawable.hp_x)
+            2 -> {
+                hp_icon_1.setImageResource(R.drawable.hp)
+                hp_icon_2.setImageResource(R.drawable.hp)
+                hp_icon_3.setImageResource(R.drawable.hp_x)
+                hp_icon_4.setImageResource(R.drawable.hp_x)
 
             }
-            4 ->{
-                hp1.setImageResource(R.drawable.hp)
-                hp2.setImageResource(R.drawable.hp)
-                hp3.setImageResource(R.drawable.hp)
-                hp4.setImageResource(R.drawable.hp)
+            3 -> {
+                hp_icon_1.setImageResource(R.drawable.hp)
+                hp_icon_2.setImageResource(R.drawable.hp)
+                hp_icon_3.setImageResource(R.drawable.hp)
+                hp_icon_4.setImageResource(R.drawable.hp_x)
 
             }
-
-        }
-        when(love){
-            0 ->{
-                love1.setImageResource(R.drawable.love_x)
-                love2.setImageResource(R.drawable.love_x)
-                love3.setImageResource(R.drawable.love_x)
-                love4.setImageResource(R.drawable.love_x)
-            }
-            1 ->{
-                love1.setImageResource(R.drawable.love)
-                love2.setImageResource(R.drawable.love_x)
-                love3.setImageResource(R.drawable.love_x)
-                love4.setImageResource(R.drawable.love_x)
-
-            }
-            2 ->{
-                love1.setImageResource(R.drawable.love)
-                love2.setImageResource(R.drawable.love)
-                love3.setImageResource(R.drawable.love_x)
-                love4.setImageResource(R.drawable.love_x)
-
-            }
-            3 ->{
-                love1.setImageResource(R.drawable.love)
-                love2.setImageResource(R.drawable.love)
-                love3.setImageResource(R.drawable.love)
-                love4.setImageResource(R.drawable.love_x)
-
-            }
-            4 ->{
-                love1.setImageResource(R.drawable.love)
-                love2.setImageResource(R.drawable.love)
-                love3.setImageResource(R.drawable.love)
-                love4.setImageResource(R.drawable.love)
+            4 -> {
+                hp_icon_1.setImageResource(R.drawable.hp)
+                hp_icon_2.setImageResource(R.drawable.hp)
+                hp_icon_3.setImageResource(R.drawable.hp)
+                hp_icon_4.setImageResource(R.drawable.hp)
 
             }
 
         }
+    }
+    fun setLove() {
+        var love1 = findViewById<ImageView>(R.id.love_icon_1)
+        var love2 = findViewById<ImageView>(R.id.love_icon_2)
+        var love3 = findViewById<ImageView>(R.id.love_icon_3)
+        var love4 = findViewById<ImageView>(R.id.love_icon_4)
+        when (love) {
+            0 -> {
+                love_icon_1.setImageResource(R.drawable.love_x)
+                love_icon_2.setImageResource(R.drawable.love_x)
+                love_icon_3.setImageResource(R.drawable.love_x)
+                love_icon_4.setImageResource(R.drawable.love_x)
+            }
+            1 -> {
+                love_icon_1.setImageResource(R.drawable.love)
+                love_icon_2.setImageResource(R.drawable.love_x)
+                love_icon_3.setImageResource(R.drawable.love_x)
+                love_icon_4.setImageResource(R.drawable.love_x)
 
+            }
+            2 -> {
+                love_icon_1.setImageResource(R.drawable.love)
+                love_icon_2.setImageResource(R.drawable.love)
+                love_icon_3.setImageResource(R.drawable.love_x)
+                love_icon_4.setImageResource(R.drawable.love_x)
 
+            }
+            3 -> {
+                love_icon_1.setImageResource(R.drawable.love)
+                love_icon_2.setImageResource(R.drawable.love)
+                love_icon_3.setImageResource(R.drawable.love)
+                love_icon_4.setImageResource(R.drawable.love_x)
 
+            }
+            4 -> {
+                love_icon_1.setImageResource(R.drawable.love)
+                love_icon_2.setImageResource(R.drawable.love)
+                love_icon_3.setImageResource(R.drawable.love)
+                love_icon_4.setImageResource(R.drawable.love)
 
+            }
 
+        }
     }
 }
