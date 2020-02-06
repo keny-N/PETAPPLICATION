@@ -15,9 +15,9 @@
 - Android7.0以上  
 
 ## ゲーム性
-
-![start_img](/gameStart.png)  
-![main_img](/gameMain.png)
+  
+<img src="/gameStart.png" width="20%">
+<img src="/gameMain.png" width="20%">
 
 ## 開発メンバー
 - 河原 慎之介(プログラミング)
