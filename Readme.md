@@ -14,6 +14,10 @@
 - Kotlin 
 - Android7.0以上  
 
+## ゲーム性
+
+![start_img](/gameStart.png)  
+![main_img](/gameMain.png)
 
 ## 開発メンバー
 - 河原 慎之介(プログラミング)
